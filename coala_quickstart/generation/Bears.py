@@ -11,7 +11,9 @@ from coalib.collecting.Collectors import (
 from coalib.output.printers.LogPrinter import LogPrinter
 
 
-def filter_relevant_bears(used_languages):
+def filter_relevant_bears(used_languages,
+                          arg_parser=None,
+                          optional_settings=True):
     """
     From the bear dict, filter the bears per relevant language.
 
@@ -26,7 +28,7 @@ def filter_relevant_bears(used_languages):
     used_languages.append(("All", 100))
 
     all_bears_by_lang = {lang: set(inverse_dicts(*get_filtered_bears(
-        [lang], log_printer)).keys()) for lang, _ in used_languages}
+        [lang], log_printer, arg_parser)).keys()) for lang, _ in used_languages}
 
     bears_by_lang = {}
     for lang in all_bears_by_lang:
@@ -35,6 +37,11 @@ def filter_relevant_bears(used_languages):
                                    if bear.name in IMPORTANT_BEAR_LIST[lang]}
         else:
             bears_by_lang[lang] = all_bears_by_lang[lang]
+
+        if not optional_settings:
+            bears_by_lang[lang] = [
+                bear for bear in bears_by_lang[lang]
+                if not bear.get_non_optional_settings()]
 
     # Each language would also have the language independent bears. We remove
     # those and put them in the "All" category.
