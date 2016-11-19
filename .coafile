@@ -13,6 +13,7 @@ use_spaces = True
 # check the line length because PEP8Bear sometimes isn't able to correct the
 # linelength.
 bears = SpaceConsistencyBear, PyUnusedCodeBear
+remove_all_unused_imports = True
 
 default_actions =
     SpaceConsistencyBear: ApplyPatchAction,
