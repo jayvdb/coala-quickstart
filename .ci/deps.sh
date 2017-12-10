@@ -12,6 +12,5 @@ for dep_version in "${dep_versions[@]}" ; do
   pyenv local $dep_version
   python3 --version
 
-  pip3 install -q -r test-requirements.txt
-  pip3 install -q -r requirements.txt
+  pip3 install -q -r requirements.txt -r test-requirements.txt
 done
