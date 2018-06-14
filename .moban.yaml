@@ -1,0 +1,21 @@
+overrides: coala.yaml
+
+name: coala-quickstart
+
+dependencies:
+  # TODO: Remove lxml once the upstream issue https://github.com/vfaronov/httpolice/issues/5 with HTTpolice is fixed.
+  - lxml==3.6.0
+  - coala_bears~=0.12.0.dev20170722110839
+  - coala_utils~=0.6.6
+  - gemfileparser~=0.6.2
+  - pyjsparser~=2.4.5
+
+
+configuration:
+  template_dir:
+    - ../coala-mobans/templates/
+  configuration: .moban.yaml
+  configuration_dir: ../coala-mobans/
+targets:
+  - requirements.txt: requirements.txt.jj2
+  - test-requirements.txt: test-requirements.txt.jj2
