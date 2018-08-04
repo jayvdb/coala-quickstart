@@ -21,7 +21,9 @@ nocover_regexes:
   # coala_quickstart/generation/Settings.py write_coafile
   - 'if os.path.isfile\(coafile\):'
   #    generation/SettingsFilling
+  - def autofill_value_if_possible
   - def is_autofill_possible
+  - def require_setting
   # .. generation/Utilities.py
   - def is_glob_exp
   - def parse_gitignore_line
