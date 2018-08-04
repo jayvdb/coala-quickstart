@@ -15,9 +15,9 @@ nocover_regexes:
   - def language_percentage
   - INFO_SETTING_MAPS =
   - gitignore_dir_list
-  - if ignore_globs is None
+  - 'if ignore_globs is None:'
   # coala_quickstart/generation/Settings.py write_coafile
-  - if os.path.isfile(coafile)
+  - 'if os.path.isfile(coafile):'
   # coala_quickstart/generation/SettingsClass.py fillup_optional_settings
   - if inside_annot
   # ... BearSettings.__init__
