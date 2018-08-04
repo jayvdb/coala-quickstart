@@ -28,8 +28,6 @@ nocover_regexes:
   - def is_glob_exp
   - def parse_gitignore_line
   - def get_language_from_hashbang
-  #   split_by_language
-  - "with open(file, 'r') as data"
   # get_extensions
   - if ext in exts
   # coala_quickstart/generation/SettingsClass.py fillup_optional_settings

@@ -97,7 +97,7 @@ def split_by_language(project_files):
             for lang in exts[ext]:
                 lang_files[lang.lower()].add(file)
                 lang_files['all'].add(file)
-        else:
+        else:  # pragma: nocover
             with open(file, 'r') as data:
                 hashbang = data.readline()
                 if(re.match(HASHBANG_REGEX, hashbang)):
