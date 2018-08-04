@@ -65,6 +65,9 @@ class UtititiesTest(unittest.TestCase):
                 }
                 self.assertIn(expected_result, search_results)
 
+        with self.assertRaises(TypeError):
+            Utilities.search_object_recursively(1)
+
         assert_value_and_path(
             self.simple_dict, "key1", None, ["value1"], [("key1",)])
 
