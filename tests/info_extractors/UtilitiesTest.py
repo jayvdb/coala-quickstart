@@ -3,7 +3,7 @@ import unittest
 from coala_quickstart.info_extractors import Utilities
 
 
-class UtititiesTest(unittest.TestCase):
+class SearchObjectRecursivelyTest(unittest.TestCase):
 
     def setUp(self):
         self.simple_dict = {
@@ -49,6 +49,11 @@ class UtititiesTest(unittest.TestCase):
             }
         }
 
+
+    def test_type_error(self):
+        with self.assertRaises(TypeError):
+            Utilities.search_object_recursively(1)
+
     def test_search_object_recursively(self):
         uut = Utilities.search_object_recursively
 
@@ -64,9 +69,6 @@ class UtititiesTest(unittest.TestCase):
                     "path": path
                 }
                 self.assertIn(expected_result, search_results)
-
-        with self.assertRaises(TypeError):
-            Utilities.search_object_recursively(1)
 
         assert_value_and_path(
             self.simple_dict, "key1", None, ["value1"], [("key1",)])
