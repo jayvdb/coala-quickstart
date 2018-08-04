@@ -51,7 +51,8 @@ class SearchObjectRecursivelyTest(unittest.TestCase):
 
 
     def test_type_error(self):
-        Utilities.search_object_recursively(1)
+        with self.assertRaises(TypeError):
+            Utilities.search_object_recursively(1, 1)
 
     def test_search_object_recursively(self):
         uut = Utilities.search_object_recursively
