@@ -1,13 +1,13 @@
 overrides: coala.yaml
 
 nocover_file_globs:
-  - coala_quickstart/generation/Bears.py
-  - coala_quickstart/generation/SettingsFilling.py
+  # coala_quickstart/generation/Bears.py
+  # coala_quickstart/generation/SettingsFilling.py
   - coala_quickstart/info_extractors/EditorconfigInfoExtractor.py
   - coala_quickstart/info_extractors/EditorconfigParsing.py
   - coala_quickstart/info_extractors/GemfileInfoExtractor.py
   - coala_quickstart/info_extractors/GruntfileInfoExtractor.py
-  - coala_quickstart/generation/Utilities.py
+  # coala_quickstart/generation/Utilities.py
 
 nocover_regexes:
   - nocover
