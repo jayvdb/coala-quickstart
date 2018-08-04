@@ -7,6 +7,12 @@ nocover_file_globs:
   - coala_quickstart/info_extractors/EditorconfigParsing.py
   - coala_quickstart/info_extractors/GemfileInfoExtractor.py
   - coala_quickstart/info_extractors/GruntfileInfoExtractor.py
+  - coala_quickstart/generation/Utilities.py
 
 nocover_regexes:
   - nocover
+  - args.green_mode
+  - def language_percentage
+  - INFO_SETTING_MAPS =
+  - gitignore_dir_list
+  - if ignore_globs is None
