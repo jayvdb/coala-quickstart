@@ -21,9 +21,6 @@ class Info:
         :param extractor: ``InfoExtractor`` instance used to extract the
                           information.
         """
-        if not self.value_type:
-            self.value_type = (object,)
-
         assert_type_signature(value, self.value_type, 'value')
         self.source = source
         self._value = value
