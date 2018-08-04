@@ -1,4 +1,4 @@
-overrides: coala.yaml
+overrides: .nocover.yaml
 
 name: coala-quickstart
 contact: coala.analyzer@gmail.com
@@ -44,6 +44,7 @@ configuration:
   configuration_dir: ../coala-mobans/
 targets:
   - setup.py: coala-setup.py.jj2
+  - setup.cfg: setup.cfg.jj2
   - requirements.txt: requirements.txt.jj2
   - test-requirements.txt: test-requirements.txt.jj2
   - coala_quickstart/VERSION: VERSION.jj2
