@@ -18,6 +18,10 @@ def assert_type_signature(value, type_signature, argname):
     True
     >>> assert_type_signature("tab", {"tab", "space"}, "var")
     True
+    >>> assert_type_signature("tab", 1, "var")
+    Traceback (most recent call last):
+      ...
+    TypeError: type_signature must be an Iterable or a type...
 
     :param value:          Object to be validated against ``type_signature``.
     :param type_signature: Object that describes allowed types and values for
