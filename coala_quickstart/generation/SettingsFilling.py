@@ -71,7 +71,7 @@ def fill_section(section,
                 setting, setting_help_text, setting_bears, to_fill_values)
             satisfied_settings.append(setting)
 
-        else:
+        else:  # pragma: no cover
             pass
 
     for setting in satisfied_settings:
@@ -229,7 +229,7 @@ def require_setting(setting_name, setting_info, section):
 
                 break
 
-            except ValueError:
+            except ValueError:  # pragma: nocover
                 print(colored(
                     STR_REPORT_INVALID_VALUE_TYPE.format(setting_info['type']),
                     REPORT_INVALID_TYPE_COLOR))

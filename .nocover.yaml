@@ -1,7 +1,9 @@
 overrides: coala.yaml
 
+allow_generic_no_cover: true
+
 nocover_file_globs:
-  # coala_quickstart/generation/Bears.py
+  - coala_quickstart/generation/Bears.py
   # coala_quickstart/generation/SettingsFilling.py
   - coala_quickstart/info_extractors/EditorconfigInfoExtractor.py
   - coala_quickstart/info_extractors/EditorconfigParsing.py
@@ -18,6 +20,16 @@ nocover_regexes:
   - 'if ignore_globs is None:'
   # coala_quickstart/generation/Settings.py write_coafile
   - 'if os.path.isfile\(coafile\):'
+  #    generation/SettingsFilling
+  - def is_autofill_possible
+  # .. generation/Utilities.py
+  - def is_glob_exp
+  - def parse_gitignore_line
+  - def get_language_from_hashbang
+  #   split_by_language
+  - "with open(file, 'r') as data"
+  # get_extensions
+  - if ext in exts
   # coala_quickstart/generation/SettingsClass.py fillup_optional_settings
   - if inside_annot
   # ... BearSettings.__init__

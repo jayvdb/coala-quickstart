@@ -49,7 +49,6 @@ class SearchObjectRecursivelyTest(unittest.TestCase):
             }
         }
 
-
     def test_type_error(self):
         with self.assertRaises(TypeError):
             Utilities.search_object_recursively(1, 1)

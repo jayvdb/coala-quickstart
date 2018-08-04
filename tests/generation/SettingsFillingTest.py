@@ -80,6 +80,10 @@ class SettingsFillingTest(unittest.TestCase):
         self.section = Section('test')
         self.section.append(Setting('key', 'val'))
 
+    def test_acquire_settings_error(self):
+        with self.assertRaises(TypeError):
+            acquire_settings(1, 2, 3)
+
     def test_fill_settings(self):
         sections = {'test': self.section}
         with simulate_console_inputs() as generator:
