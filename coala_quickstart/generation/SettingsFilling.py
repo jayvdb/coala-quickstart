@@ -86,10 +86,8 @@ def fill_section(section,
     return section
 
 
-def autofill_value_if_possible(setting_key,
-                               section,
-                               bears,
-                               extracted_information):
+def autofill_value_if_possible(
+        setting_key, section, bears, extracted_information):
     """
     For the given setting configurations, checks if there is a
     possiblity of filling the value from the extracted information,
