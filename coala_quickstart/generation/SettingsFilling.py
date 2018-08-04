@@ -121,10 +121,7 @@ def autofill_value_if_possible(setting_key,
                             yield mapping['mapper_function'](val)
 
 
-def is_autofill_possible(setting_key,
-                         section,
-                         bears,
-                         extracted_info):
+def is_autofill_possible(setting_key, section, bears, extracted_info):
     """
     Checks if it is possible to autofill the setting values.
     """
