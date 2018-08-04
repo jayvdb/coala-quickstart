@@ -10,9 +10,6 @@ cache:
 before_install:
   - pip install setuptools -U
   - pip install -r requirements.txt -r test-requirements.txt
-  - git clone https://gitlab.com/coala/mobans ../coala-mobans
-  - moban
-  - git diff --exit-code
 
 script:
   - pytest
