@@ -86,8 +86,7 @@ def fill_section(section,
     return section
 
 
-def autofill_value_if_possible(
-        setting_key, section, bears, extracted_information):
+def autofill_value(setting_key, section, bears, extracted_information):
     """
     For the given setting configurations, checks if there is a
     possiblity of filling the value from the extracted information,
@@ -117,6 +116,9 @@ def autofill_value_if_possible(
                     for val in values:
                         if scope.check_is_applicable_information(section, val):
                             yield mapping['mapper_function'](val)
+
+
+autofill_value_if_possible = autofill_value
 
 
 def is_autofill_possible(setting_key, section, bears, extracted_info):
