@@ -129,7 +129,7 @@ def ask_to_select_languages(languages, printer, non_interactive):
                 ' option numbers'.format(str(num)))
             return ask_to_select_languages(languages,
                                            printer, False)
-    print_used_languages(printer, languages, False)
+    print_used_languages(printer, selected_languages, False)
     return selected_languages
 
 
