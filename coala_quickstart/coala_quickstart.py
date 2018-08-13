@@ -86,6 +86,7 @@ coala-quickstart automatically creates a .coafile for use by coala.
 
 
 def main():
+    global MAX_ARGS_GREEN_MODE, MAX_VALUES_GREEN_MODE
     arg_parser = _get_arg_parser()
     args = arg_parser.parse_args()
 
