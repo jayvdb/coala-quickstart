@@ -52,7 +52,7 @@ def green_mode(project_dir: str, ignore_globs, bears, bear_settings_obj,
     """
     from coala_quickstart.green_mode.filename_operations import (
         check_filename_prefix_postfix)
-    ignore_globs.append(os.join(project_dir, '.git', '**'))
+    ignore_globs.append(os.path.join(project_dir, '.git', '**'))
     project_data = project_dir + os.sep + PROJECT_DATA
 
     # Currently as a temporary measure, recreating the file at each run from
