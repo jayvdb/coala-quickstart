@@ -142,7 +142,9 @@ def main():
             project_dir, ignore_globs, relevant_bears, bear_settings_obj,
             MAX_ARGS_GREEN_MODE,
             MAX_VALUES_GREEN_MODE,
-            printer)
+            project_files,
+            printer,
+        )
         exit()
 
     print_relevant_bears(printer, relevant_bears)

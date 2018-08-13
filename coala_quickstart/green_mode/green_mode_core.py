@@ -6,6 +6,8 @@ from coala_quickstart.generation.Utilities import (
     )
 from coala_quickstart.green_mode.green_mode import (
     bear_test_fun,
+    generate_data_struct_for_sections,
+    generate_green_mode_sections,
     initialize_project_data,
     run_quickstartbear,
     )
@@ -17,7 +19,8 @@ PROJECT_DATA = '.project_data.yaml'
 
 
 def green_mode(project_dir: str, ignore_globs, bears, bear_settings_obj,
-               op_args_limit, value_to_op_args_limit, printer=None):
+               op_args_limit, value_to_op_args_limit, project_files,
+               printer=None):
     """
     Runs the green mode of coala-quickstart.
 
@@ -41,6 +44,8 @@ def green_mode(project_dir: str, ignore_globs, bears, bear_settings_obj,
         about whether a setting takes a boolean value or any other value.
     :param op_args_limit:
         The maximum number of optional bear arguments allowed for guessing.
+    :param project_files:
+        The list of files in the project.
     :param value_to_op_args_limit:
         The maximum number of values to run the bear again and again for
         a optional setting.
@@ -77,6 +82,20 @@ def green_mode(project_dir: str, ignore_globs, bears, bear_settings_obj,
         op_args_limit, value_to_op_args_limit, printer)
 
     # Call to create `.coafile` goes over here.
+    settings_non_op = generate_data_struct_for_sections(
+        final_non_op_results)
+    settings_unified = generate_data_struct_for_sections(
+        final_unified_results)
+
+    # Combine the settings for the sections due to the missed out bears in
+    # unified results due to the limitations on maximum number of optionanl
+    # arguments and the values to those arguments that can be supplied.
+    for bear in settings_non_op:
+        if bear not in settings_unified:
+            settings_unified[bear] = settings_non_op[bear]
+
+    generate_green_mode_sections(
+        settings_unified, project_dir, project_files, ignore_globs, printer)
 
     # Final Dump.
     dump_yaml_to_file(project_data, project_data_contents)

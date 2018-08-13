@@ -13,6 +13,7 @@ nocover_file_globs:
   - coala_quickstart/info_extractors/GemfileInfoExtractor.py
   - coala_quickstart/info_extractors/GruntfileInfoExtractor.py
   - coala_quickstart/green_mode/green_mode_core.py
+  - coala_quickstart/green_mode/find_globs.py
 
 nocover_regexes:
   # coala_quickstart.py

@@ -106,8 +106,8 @@ def ask_to_select_languages(languages, printer, non_interactive):
         for i in range(num_spaces):
             spaces += ' '
         printer.print(
-            '    {}. {}{} {:>2}%'.format(
-                idx + 1, lang, spaces, int(percentages[idx])), color='green')
+            '             {}. {}{} {:>2}%'.format(
+                idx + 1, lang, spaces, int(percentages[idx])))
 
     selected_numbers = []
     try:
