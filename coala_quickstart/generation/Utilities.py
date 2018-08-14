@@ -99,16 +99,21 @@ def split_by_language(project_files):
             for lang in exts[ext]:
                 lang_files[lang.lower()].add(file)
                 lang_files['all'].add(file)
-        else:  # pragma: nocover
-            with open(file, 'r') as data:
-                hashbang = data.readline()
-                if(re.match(HASHBANG_REGEX, hashbang)):
-                    language = get_language_from_hashbang(hashbang).lower()
-                    for ext in exts:
-                        for lang in exts[ext]:
-                            if language == lang.lower():
-                                lang_files[lang.lower()].add(file)
-                                lang_files['all'].add(file)
+
+            continue
+
+        hashbang = get_hashbang(file)
+
+        if not hashbang:
+            continue
+
+        language = get_language_from_hashbang(hashbang).lower()
+        for ext in exts:
+            for lang in exts[ext]:
+                if language == lang.lower():
+                    lang_files[lang.lower()].add(file)
+                    lang_files['all'].add(file)
+
     return lang_files
 
 
@@ -179,8 +184,28 @@ def search_for_orig(decorated, orig_name):
                 return found
 
 
+def get_hashbang(file_path):
+    if not os.path.exists(file_path):
+        return None
+
+    try:
+        with open(file_path, 'r') as data:
+            hashbang = data.readline()
+    except UnicodeDecodeError:  # pragma nt: no cover
+        return
+
+    hashbang = hashbang.strip()
+    if not hashbang:
+        return
+
+    if not re.match(HASHBANG_REGEX, hashbang):
+        return
+
+    return hashbang
+
+
 def get_language_from_hashbang(hashbang):
-    if(re.match('(^#!(.*))', hashbang)):
+    if hashbang:
         hashbang_contents = hashbang.split(' ')
         try:
             # For eg: #!bin/bash python3
