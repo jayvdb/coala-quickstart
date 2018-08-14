@@ -5,7 +5,10 @@ import re
 
 from coala_utils.string_processing.StringConverter import StringConverter
 from coala_utils.Extensions import exts
-from coala_quickstart.generation.Utilities import get_language_from_hashbang
+from coala_quickstart.generation.Utilities import (
+    get_hashbang,
+    get_language_from_hashbang,
+)
 from coala_quickstart.Constants import (
     ASK_TO_SELECT_LANG,
     HASHBANG_REGEX,
@@ -56,9 +59,10 @@ def language_percentage(file_paths):
             for lang in exts[ext]:
                 results[lang] += delta
 
-        elif os.path.exists(file_path):
-            with open(file_path, 'r') as data:
-                hashbang = data.readline()
+        else:
+            hashbang = get_hashbang(file_path)
+
+            if hashbang:
                 if re.match(HASHBANG_REGEX, hashbang):
                     language = get_language_from_hashbang(hashbang).lower()
                     for ext in exts:

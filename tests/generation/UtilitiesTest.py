@@ -3,12 +3,15 @@ import itertools
 import types
 import unittest
 
+from tempfile import NamedTemporaryFile
+
 from tests.test_bears.AllKindsOfSettingsDependentBear import (
     AllKindsOfSettingsDependentBear)
 from coala_quickstart.generation.Utilities import (
     contained_in,
     get_default_args, get_all_args,
     search_for_orig, concatenate, peek,
+    get_hashbang,
     get_language_from_hashbang)
 from coalib.results.SourcePosition import SourcePosition
 from coalib.results.SourceRange import SourceRange
@@ -72,6 +75,66 @@ class TestAdditionalFunctions(unittest.TestCase):
                           'use_tabs': False, 'max_line_lengths': 1000,
                           'no_chars': 79,
                           'chars': False, 'dependency_results': {}})
+
+
+class TestHashbag(unittest.TestCase):
+
+    def test_missing_file(self):
+        self.assertIsNone(get_hashbang('does_not_exist'))
+
+    def test_with_bash(self):
+        with NamedTemporaryFile(mode='w+t', delete=False) as temp_file:
+            temp_file.write('#!bin/bash\n')
+            temp_file.close()
+            self.assertEqual(get_hashbang(temp_file.name), '#!bin/bash')
+
+    def test_no_eol(self):
+        with NamedTemporaryFile(mode='w+t', delete=False) as temp_file:
+            temp_file.write('#!bin/bash')
+            temp_file.close()
+            self.assertEqual(get_hashbang(temp_file.name), '#!bin/bash')
+
+    def test_with_slash(self):
+        with NamedTemporaryFile(mode='w+t', delete=False) as temp_file:
+            temp_file.write('#!/bin/bash\n')
+            temp_file.close()
+            self.assertEqual(get_hashbang(temp_file.name), '#!/bin/bash')
+
+    def test_with_space(self):
+        with NamedTemporaryFile(mode='w+t', delete=False) as temp_file:
+            temp_file.write('#!/bin/bash \n')
+            temp_file.close()
+            self.assertEqual(get_hashbang(temp_file.name), '#!/bin/bash')
+
+    def test_env(self):
+        with NamedTemporaryFile(mode='w+t', delete=False) as temp_file:
+            temp_file.write('#!/bin/env bash\n')
+            temp_file.close()
+            self.assertEqual(get_hashbang(temp_file.name), '#!/bin/env bash')
+
+    def test_non_unicode_file(self):
+        with NamedTemporaryFile(mode='w+b', delete=False) as temp_file:
+            temp_file.write(b'\2000x80')
+            temp_file.close()
+            self.assertIsNone(get_hashbang(temp_file.name))
+
+    def test_empty_file(self):
+        with NamedTemporaryFile(mode='w+t', delete=False) as temp_file:
+            temp_file.write('\n')
+            temp_file.close()
+            self.assertIsNone(get_hashbang(temp_file.name))
+
+    def test_no_bang(self):
+        with NamedTemporaryFile(mode='w+t', delete=False) as temp_file:
+            temp_file.write('#bin/bash')
+            temp_file.close()
+            self.assertIsNone(get_hashbang(temp_file.name))
+
+    def test_no_hash(self):
+        with NamedTemporaryFile(mode='w+t', delete=False) as temp_file:
+            temp_file.write('!bin/bash')
+            temp_file.close()
+            self.assertIsNone(get_hashbang(temp_file.name))
 
     def test_get_language_from_hashbang(self):
         self.assertEqual(get_language_from_hashbang('#!/usr/bin/env python'),
