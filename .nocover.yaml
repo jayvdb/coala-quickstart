@@ -45,4 +45,3 @@ nocover_regexes:
   - def is_glob_exp
   - def get_gitignore_glob
   - def parse_gitignore_line
-  - def get_language_from_hashbang
