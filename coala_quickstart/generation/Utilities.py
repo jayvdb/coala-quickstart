@@ -191,7 +191,7 @@ def get_hashbang(file_path):
     try:
         with open(file_path, 'r') as data:
             hashbang = data.readline()
-    except UnicodeDecodeError:  # pragma nt: no cover
+    except UnicodeDecodeError:
         return
 
     hashbang = hashbang.strip()

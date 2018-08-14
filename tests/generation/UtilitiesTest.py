@@ -115,7 +115,7 @@ class TestHashBang(unittest.TestCase):
 
     def test_non_unicode_file(self):
         with NamedTemporaryFile(mode='w+b', delete=False) as temp_file:
-            temp_file.write(b'\2000x80')
+            temp_file.write(b'\xFF\xFE')
             temp_file.close()
             self.assertIsNone(get_hashbang(temp_file.name))
 
