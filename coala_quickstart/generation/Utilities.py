@@ -100,8 +100,9 @@ def split_by_language(project_files):
                 lang_files[lang.lower()].add(file)
                 lang_files['all'].add(file)
         else:  # pragma: nocover
-            with open(file, 'r') as data:
-                hashbang = data.readline()
+            hashbang = get_hashbang(file_path)
+
+            if hashbang:
                 if(re.match(HASHBANG_REGEX, hashbang)):
                     language = get_language_from_hashbang(hashbang).lower()
                     for ext in exts:
@@ -177,6 +178,17 @@ def search_for_orig(decorated, orig_name):
             if hasattr(obj, '__closure__') and obj.__closure__:
                 found = search_for_orig(obj, orig_name)
                 return found
+
+
+def get_hashbang(file_path):
+    if not os.path.exists(file_path):
+        return None
+
+    try:
+        with open(file_path, 'r') as data:
+            return data.readline()
+    except UnicodeDecodeError:
+            pass
 
 
 def get_language_from_hashbang(hashbang):
