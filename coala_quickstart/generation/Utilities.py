@@ -201,7 +201,7 @@ def get_hashbang(file_path):
 
 
 def get_language_from_hashbang(hashbang):
-    if(re.match('(^#!(.*))', hashbang)):
+    if hashbang:
         hashbang_contents = hashbang.split(' ')
         try:
             # For eg: #!bin/bash python3

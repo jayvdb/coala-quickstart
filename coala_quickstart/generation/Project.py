@@ -59,16 +59,16 @@ def language_percentage(file_paths):
             for lang in exts[ext]:
                 results[lang] += delta
 
-        else:
-            hashbang = get_hashbang(file_path)
+            continue
 
-            if hashbang:
-                if re.match(HASHBANG_REGEX, hashbang):
-                    language = get_language_from_hashbang(hashbang).lower()
-                    for ext in exts:
-                        for lang in exts[ext]:
-                            if language == lang.lower():
-                                results[lang.lower()] += delta
+        hashbang = get_hashbang(file_path)
+
+        if hashbang:
+            language = get_language_from_hashbang(hashbang).lower()
+            for ext in exts:
+                for lang in exts[ext]:
+                    if language == lang.lower():
+                        results[lang.lower()] += delta
 
     return results
 
