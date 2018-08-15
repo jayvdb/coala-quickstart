@@ -73,6 +73,12 @@ coala-quickstart automatically creates a .coafile for use by coala.
              ' configuration as closely as possible to your project.')
 
     arg_parser.add_argument(
+        '-j', '--jobs', nargs='?', type=int,
+        help='Number of subprocesses to use to run green mode in parallel. '
+             'The default will auto-detect the number of processors '
+             'available to use. Set to 1 to disable multiprocessing.')
+
+    arg_parser.add_argument(
         '--max-args', nargs='?', type=int,
         help='Maximum number of optional settings allowed to be checked'
              ' by green_mode for each bear.')
@@ -139,12 +145,14 @@ def main():
 
     if args.green_mode:
         bear_settings_obj = collect_bear_settings(relevant_bears)
+        jobs = args.jobs if args.jobs else 0
         green_mode(
             project_dir, ignore_globs, relevant_bears, bear_settings_obj,
             MAX_ARGS_GREEN_MODE,
             MAX_VALUES_GREEN_MODE,
             project_files,
             printer,
+            jobs=jobs,
         )
         exit()
 

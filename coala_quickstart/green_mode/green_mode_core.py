@@ -20,7 +20,9 @@ PROJECT_DATA = '.project_data.yaml'
 
 def green_mode(project_dir: str, ignore_globs, bears, bear_settings_obj,
                op_args_limit, value_to_op_args_limit, project_files,
-               printer=None):
+               printer=None,
+               jobs: int = 0,
+               ):
     """
     Runs the green mode of coala-quickstart.
 
@@ -49,6 +51,8 @@ def green_mode(project_dir: str, ignore_globs, bears, bear_settings_obj,
     :param value_to_op_args_limit:
         The maximum number of values to run the bear again and again for
         a optional setting.
+    :param jobs:
+        The maximum number of bears to run concurrently.
     """
     from coala_quickstart.green_mode.filename_operations import (
         check_filename_prefix_postfix)
@@ -79,7 +83,9 @@ def green_mode(project_dir: str, ignore_globs, bears, bear_settings_obj,
     final_non_op_results, final_unified_results = bear_test_fun(
         bears, bear_settings_obj, file_dict,
         ignore_ranges, project_data_contents, file_names,
-        op_args_limit, value_to_op_args_limit, printer)
+        op_args_limit, value_to_op_args_limit, printer,
+        jobs=jobs,
+        )
 
     # Call to create `.coafile` goes over here.
     settings_non_op = generate_data_struct_for_sections(
