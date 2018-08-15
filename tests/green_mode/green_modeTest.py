@@ -13,6 +13,7 @@ from coala_quickstart.generation.SettingsClass import (
 from coala_quickstart.green_mode.Setting import (
     find_max_min_of_setting,
     )
+from coala_quickstart.green_mode import green_mode
 from coala_quickstart.green_mode.green_mode import (
     bear_test_fun,
     check_bear_results,
@@ -571,5 +572,57 @@ class Test_green_mode(unittest.TestCase):
             self.assertIn(line, [i.strip('\\').replace('\\\\C', 'C')
                                  for i in contents.split('\n')])
 
-    def test_green_mode(self):
-        pass
+
+class MultiProcessingTest(unittest.TestCase):
+
+    def setUp(self):
+        self.orig_cpus = green_mode._RESERVE_CPUS
+
+    def tearDown(self):
+        green_mode._RESERVE_CPUS = self.orig_cpus
+
+    def test_no_pool(self):
+        with self.assertRaises(TypeError):
+            green_mode._create_mp_pool(None)
+        with self.assertRaises(ValueError):
+            self.assertIsNone(green_mode._create_mp_pool(-1))
+        self.assertIsNone(green_mode._create_mp_pool(1))
+
+    def test_reserve_cpus(self):
+        green_mode._RESERVE_CPUS = 1
+        with patch('multiprocessing.cpu_count', return_value=1):
+            self.assertIsNone(green_mode._create_mp_pool(0))
+        green_mode._RESERVE_CPUS = 2
+        with patch('multiprocessing.cpu_count', return_value=2):
+            self.assertIsNone(green_mode._create_mp_pool(0))
+
+        green_mode._RESERVE_CPUS = 1
+        with patch('multiprocessing.cpu_count', return_value=2):
+            self.assertIsNotNone(green_mode._create_mp_pool(0))
+
+        green_mode._RESERVE_CPUS = 1
+        with patch('multiprocessing.cpu_count', return_value=2):
+            self.assertIsNotNone(green_mode._create_mp_pool(2))
+
+        green_mode._RESERVE_CPUS = 1
+        with patch('multiprocessing.cpu_count', return_value=10):
+            self.assertIsNotNone(green_mode._create_mp_pool(2))
+
+    def test_ci_pool_min(self):
+        if not os.environ.get('CI'):
+            return
+
+        if green_mode._DISABLE_MP:
+            with patch('multiprocessing.cpu_count', return_value=3):
+                self.assertIsNone(green_mode._create_mp_pool(0))
+            with patch('multiprocessing.cpu_count', return_value=100):
+                self.assertIsNone(green_mode._create_mp_pool(0))
+        elif green_mode._RESERVE_CPUS == 2:
+            with patch('multiprocessing.cpu_count', return_value=2):
+                self.assertIsNone(green_mode._create_mp_pool(0))
+            with patch('multiprocessing.cpu_count', return_value=3):
+                self.assertIsNotNone(green_mode._create_mp_pool(0))
+        else:
+            with patch('multiprocessing.cpu_count', return_value=2):
+                self.assertIsNotNone(green_mode._create_mp_pool(2))
+                self.assertIsNotNone(green_mode._create_mp_pool(0))

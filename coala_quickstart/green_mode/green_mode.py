@@ -2,6 +2,7 @@ import fnmatch
 import itertools
 import operator
 import os
+import sys
 from copy import deepcopy
 from pathlib import Path
 
@@ -41,6 +42,18 @@ from coalib.settings.Section import Section
 
 
 settings_key = 'green_mode_infinite_value_settings'
+_CI_PYTEST_ACTIVE = os.environ.get('CI') and os.environ.get('PYTEST')
+_PYTHON_VERSION_MINOR = sys.version_info[0:2]
+_RESERVE_CPUS = 1
+# FIXME: Multiprocessing not working on windows.
+# Also Python 3.5 fails even with _RESERVE_CPUS set to 2
+_DISABLE_MP = os.name == 'nt' or _PYTHON_VERSION_MINOR == (3, 5)
+
+if _CI_PYTEST_ACTIVE:  # pragma: no cover
+    if _DISABLE_MP:
+        _RESERVE_CPUS = sys.maxsize
+    elif _PYTHON_VERSION_MINOR == (3, 4):
+        _RESERVE_CPUS = 2
 
 
 def initialize_project_data(dir, ignore_globs):
@@ -272,13 +285,38 @@ def check_bear_results(ret_val, ignore_ranges):
     return True
 
 
+def _create_mp_pool(jobs: int = 0):
+    """
+    Create a multiprocessing pool.
+
+    :param jobs: Number of jobs to run concurrently.
+                 0 means auto-detect.  1 means no pool.
+    """
+    if not isinstance(jobs, int):
+        raise TypeError('jobs must be an int')
+    if jobs == 1:
+        return
+    if jobs < 0:
+        raise ValueError('jobs must be 0 or a positive integer')
+
+    import multiprocessing as mp
+    cpu_count = mp.cpu_count()
+    if cpu_count <= _RESERVE_CPUS:
+        return
+    if jobs == 0 or jobs > cpu_count - _RESERVE_CPUS:
+        jobs = cpu_count - _RESERVE_CPUS
+    pool = mp.Pool(processes=jobs)
+    return pool
+
+
 def local_bear_test(bear, file_dict, file_names, lang, kwargs,
-                    ignore_ranges):
+                    ignore_ranges,
+                    jobs: int = 0,
+                    ):
     lang_files = split_by_language(file_names)
     lang_files = {k.lower(): v for k, v in lang_files.items()}
 
-    import multiprocessing as mp
-    pool = mp.Pool(processes=mp.cpu_count()-1)
+    pool = _create_mp_pool(jobs)
 
     file_results = []
 
@@ -317,12 +355,11 @@ def local_bear_test(bear, file_dict, file_names, lang, kwargs,
             bear_obj = bear(section, None)
             ret_val = bear_obj.run(**dict(zip(kwargs, vals)))
             ret_val = [] if not ret_val else list(ret_val)
-            # FIXME: Multiprocessing not working on windows.
-            if os.name == 'nt':  # pragma posix: no cover
-                results.append(check_bear_results(ret_val, ignore_ranges))
-            else:  # pragma nt: no cover
+            if pool:  # pragma Python 3.5: no cover; pragma nt: no cover
                 results.append(pool.apply(check_bear_results,
                                           args=(ret_val, ignore_ranges)))
+            else:  # pragma Python 3.4,3.6,3.7: no cover
+                results.append(check_bear_results(ret_val, ignore_ranges))
 
         for index, result in enumerate(results):
             if result is True:
@@ -335,13 +372,14 @@ def local_bear_test(bear, file_dict, file_names, lang, kwargs,
     return {bear: file_results}
 
 
-def global_bear_test(bear, file_dict, kwargs, ignore_ranges):
-    import multiprocessing as mp
-    pool = mp.Pool(processes=mp.cpu_count()-1)
-
+def global_bear_test(bear, file_dict, kwargs, ignore_ranges,
+                     jobs: int = 0,
+                     ):
     results = []
     values = []
     file_results = []
+
+    pool = _create_mp_pool(jobs)
 
     for vals in itertools.product(*kwargs.values()):
         values.append(vals)
@@ -351,11 +389,11 @@ def global_bear_test(bear, file_dict, kwargs, ignore_ranges):
         bear_obj.file_dict = file_dict
         ret_val = bear_obj.run(**dict(zip(kwargs, vals)))
         ret_val = list(ret_val)
-        if os.name == 'nt':  # pragma posix: no cover
-            results.append(check_bear_results(ret_val, ignore_ranges))
-        else:  # pragma nt: no cover
+        if pool:  # pragma Python 3.5: no cover; pragma nt: no cover
             results.append(pool.apply(check_bear_results,
                                       args=(ret_val, ignore_ranges)))
+        else:  # pragma Python 3.4,3.6,3.7: no cover
+            results.append(check_bear_results(ret_val, ignore_ranges))
 
     for index, result in enumerate(results):
         if result is True:
@@ -367,7 +405,9 @@ def global_bear_test(bear, file_dict, kwargs, ignore_ranges):
 
 
 def run_test_on_each_bear(bear, file_dict, file_names, lang, kwargs,
-                          ignore_ranges, type_of_setting, printer=None):
+                          ignore_ranges, type_of_setting, printer=None,
+                          jobs: int = 0,
+                          ):
     if type_of_setting == 'non-op':
         printer.print('Finding suitable values to necessary '
                       'settings for ' + bear.__name__ +
@@ -389,7 +429,8 @@ def run_test_on_each_bear(bear, file_dict, file_names, lang, kwargs,
 
 def bear_test_fun(bears, bear_settings_obj, file_dict, ignore_ranges,
                   contents, file_names, op_args_limit, value_to_op_args_limit,
-                  printer=None):
+                  printer=None,
+                  jobs: int = 0):
     """
     Tests the bears with the generated file dict and list of files
     along with the values recieved for each and every type of setting
@@ -440,7 +481,9 @@ def bear_test_fun(bears, bear_settings_obj, file_dict, ignore_ranges,
             op_kwargs = get_kwargs(op_set, bear, contents)
             non_op_file_results = run_test_on_each_bear(
                 bear, file_dict, file_names, lang, non_op_kwargs,
-                ignore_ranges, 'non-op', printer)
+                ignore_ranges, 'non-op', printer,
+                jobs=jobs,
+                )
             if len(op_kwargs) < op_args_limit and not(
                     True in [len(value) > value_to_op_args_limit
                              for key, value in op_kwargs.items()]):
@@ -449,7 +492,9 @@ def bear_test_fun(bears, bear_settings_obj, file_dict, ignore_ranges,
                 unified_file_results = run_test_on_each_bear(
                     bear, file_dict, file_names, lang,
                     unified_kwargs, ignore_ranges, 'unified',
-                    printer)
+                    printer,
+                    jobs=jobs,
+                    )
             else:
                 unified_file_results = None
             final_non_op_results.append(non_op_file_results)
