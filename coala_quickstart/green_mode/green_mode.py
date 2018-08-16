@@ -11,11 +11,7 @@ from coala_quickstart.generation.Utilities import (
     get_all_args,
     get_extensions,
     get_yaml_contents,
-    peek,
     split_by_language,
-    )
-from coala_quickstart.generation.SettingsClass import (
-    SettingTypes,
     )
 from coala_quickstart.green_mode.file_aggregator import (
     aggregate_files,
@@ -74,7 +70,6 @@ def initialize_project_data(dir, ignore_globs):
     """
     files_dirs = os.listdir(dir)
     # files_dirs holds names of both files and dirs.
-    dir_name = dir[dir.rfind(os.sep)+1:]
     final_data = []
 
     for i in files_dirs:

@@ -22,9 +22,7 @@ from coala_quickstart.green_mode.green_mode import (
     generate_green_mode_sections,
     get_kwargs,
     get_setting_type,
-    global_bear_test,
     initialize_project_data,
-    local_bear_test,
     run_quickstartbear,
     )
 from coala_quickstart.generation.Utilities import (
@@ -211,11 +209,7 @@ class Test_green_mode(unittest.TestCase):
                                {'min_lines_per_file': 5}]
         test_contents = deepcopy(contents)
         test_contents[settings_key] = settings_key_values
-        (final_contents, ignore_ranges, complete_file_dict,
-         complete_filename_list) = run_quickstartbear(contents, dir_path)
-        ignore_file_name = dir_path + 'test_dir' + os.sep + 'test_file.py'
-        start = SourcePosition(ignore_file_name, line=3, column=1)
-        stop = SourcePosition(ignore_file_name, line=4, column=20)
+        (final_contents, _, _, _) = run_quickstartbear(contents, dir_path)
         self.assertEqual(test_contents, final_contents)
         # TODO: Test for the ignores too which is currently broken
         # due to the tests contained in this file have test coafile

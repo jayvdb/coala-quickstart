@@ -19,7 +19,7 @@ class Node:
     def insert(self, string, idx):
         if idx >= len(string):
             return
-        code = ord(string[idx])  # ASCII code
+        ord(string[idx])  # ASCII code
         ch = string[idx]
         if ch in self.children:
             self.children[ch].count += 1

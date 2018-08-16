@@ -14,7 +14,6 @@ from coala_quickstart.generation.InfoCollector import collect_info
 from coala_quickstart.generation.Project import (
     ask_to_select_languages,
     get_used_languages,
-    print_used_languages,
     valid_path,
     )
 from coala_quickstart.generation.FileGlobs import get_project_files

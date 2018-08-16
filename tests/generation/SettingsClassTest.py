@@ -2,7 +2,7 @@ import unittest
 
 from pyprint.ConsolePrinter import ConsolePrinter
 from coala_quickstart.generation.SettingsClass import (
-    collect_bear_settings, BearSettings, SettingTypes)
+    collect_bear_settings, SettingTypes)
 from tests.test_bears.AllKindsOfSettingsDependentBear import (
     AllKindsOfSettingsDependentBear)
 from tests.test_bears.AllKindsOfSettingsDependentDecoratedBear import (
@@ -183,5 +183,4 @@ class TestSettingsClass(unittest.TestCase):
 
     def test_invalid_trigger(self):
         with self.assertRaises(ValueError, msg='Invalid trigger Type'):
-            setting = SettingTypes({'a': bool}, None, None,
-                                   'wubalubadubdub')
+            SettingTypes({'a': bool}, None, None, 'wubalubadubdub')

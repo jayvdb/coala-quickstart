@@ -50,7 +50,6 @@ class TestAdditionalFunctions(unittest.TestCase):
         self.assertEqual(search_for_orig(foo, "bar"), None)
         self.assertEqual(search_for_orig(foo, "foo"), None)
         func = foo_bar(3)
-        x = func()  # function with closure
         self.assertEqual(search_for_orig(func, "bar"), None)
 
     def test_get_default_args(self):
