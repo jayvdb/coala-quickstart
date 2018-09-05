@@ -94,7 +94,7 @@ class SettingsFillingTest(unittest.TestCase):
                           extracted_info={})
             self.assertEqual(generator.last_input, -1)
 
-        self.section.append(Setting('bears', 'SpaceConsistencyTestBear'))
+        self.section.append(Setting('bears', 'BearC'))
 
         with simulate_console_inputs('True'), bear_test_module():
             local_bears, global_bears = fill_settings(
@@ -111,7 +111,7 @@ class SettingsFillingTest(unittest.TestCase):
         self.section = Section('test')
         sections = {'test': self.section}
 
-        self.section.append(Setting('bears', 'SpaceConsistencyTestBear'))
+        self.section.append(Setting('bears', 'BearC'))
 
         with simulate_console_inputs() as generator, bear_test_module():
             with generate_files([".editorconfig"],
@@ -135,7 +135,7 @@ class SettingsFillingTest(unittest.TestCase):
         self.section = Section('test')
         sections = {'test': self.section}
 
-        self.section.append(Setting('bears', 'SpaceConsistencyTestBear'))
+        self.section.append(Setting('bears', 'BearC'))
 
         with simulate_console_inputs("False") as generator, \
                 bear_test_module(), retrieve_stdout() as sio:
@@ -164,7 +164,7 @@ class SettingsFillingTest(unittest.TestCase):
         self.section["files"] = "*.py"
         sections = {'test': self.section}
 
-        self.section.append(Setting('bears', 'SpaceConsistencyTestBear'))
+        self.section.append(Setting('bears', 'BearC'))
 
         with simulate_console_inputs() as generator, bear_test_module():
             with generate_files([".editorconfig", "hello.py"],
@@ -189,7 +189,7 @@ class SettingsFillingTest(unittest.TestCase):
         self.section["files"] = "hello.py"
         sections = {'test1': self.section}
 
-        self.section.append(Setting('bears', 'SpaceConsistencyTestBear'))
+        self.section.append(Setting('bears', 'BearC'))
 
         with simulate_console_inputs("False") as generator, \
                 bear_test_module(), retrieve_stdout() as sio:
@@ -259,7 +259,7 @@ class SettingsFillingTest(unittest.TestCase):
     def test_fill_section_boolean_setting(self):
         self.section = Section('test')
         sections = {'test': self.section}
-        self.section.append(Setting('bears', 'SpaceConsistencyTestBear'))
+        self.section.append(Setting('bears', 'BearC'))
 
         with simulate_console_inputs(" hell yeah!!! ") as generator, \
                 bear_test_module():
@@ -273,7 +273,7 @@ class SettingsFillingTest(unittest.TestCase):
 
         self.section = Section('test')
         sections = {'test': self.section}
-        self.section.append(Setting('bears', 'SpaceConsistencyTestBear'))
+        self.section.append(Setting('bears', 'BearC'))
         with simulate_console_inputs("not in a million years") as generator, \
                 bear_test_module():
             local_bears, global_bears = fill_settings(
@@ -286,7 +286,7 @@ class SettingsFillingTest(unittest.TestCase):
 
         self.section = Section('test')
         sections = {'test': self.section}
-        self.section.append(Setting('bears', 'SpaceConsistencyTestBear'))
+        self.section.append(Setting('bears', 'BearC'))
         with simulate_console_inputs("don't know", "nah") as generator, \
                 bear_test_module():
             local_bears, global_bears = fill_settings(

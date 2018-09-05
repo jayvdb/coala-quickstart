@@ -1,7 +1,6 @@
 from coalib.bears.LocalBear import LocalBear
-from tests.test_bears.SpaceConsistencyTestBear import \
-    SpaceConsistencyTestBear
+from tests.test_bears.BearA import BearA
 
 
 class DependentBear(LocalBear):
-    BEAR_DEPS = {SpaceConsistencyTestBear}
+    BEAR_DEPS = {BearA}
