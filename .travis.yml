@@ -32,7 +32,9 @@ cache:
 
 before_install:
   - pip install setuptools -U
-  - pip install -r requirements.txt -r test-requirements.txt
+  - printf '%s\n'
+           "$(cat test-requirements.txt requirements.txt)"
+           > requirements.txt
 
 script:
   - pytest
