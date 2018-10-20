@@ -28,8 +28,8 @@ entry_points:
     - coala-quickstart = coala_quickstart.coala_quickstart:main
 
 dependencies:
-  - 'git+https://github.com/coala/coala#egg=coala'
-  - 'git+https://github.com/coala/coala-bears#egg=coala-bears'
+  - 'https://github.com/coala/coala/archive/master.zip#egg=coala'
+  - 'https://github.com/coala/coala-bears/archive/master.zip#egg=coala-bears'
   - gemfileparser~=0.6.2
   - pyjsparser~=2.4.5
 
