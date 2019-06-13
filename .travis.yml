@@ -31,7 +31,7 @@ cache:
     - ~/nltk_data
 
 before_install:
-  - pip install pip==9.0.3 setuptools -U
+  - pip install 'six>=1.11.0' pip==9.0.3 setuptools -U
   - printf '%s\n'
            "$(cat test-requirements.txt requirements.txt)"
            > requirements.txt
