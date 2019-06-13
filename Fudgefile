@@ -1,0 +1,14 @@
+{
+    "scripts": {
+        "post": {
+            "install": ". $env:FudgeCI/FudgePostInstall.ps1; Run-PostInstall"
+        }
+    },
+    "packages": [
+        { "name": "msys2", "params": "/InstallDir:C:\\msys64 /NoUpdate" },
+        { "name": "hg", "version": "5.0" },
+        { "name": "python", "version": "3.6.8" },
+        { "name": "nodejs", "version": "11.13.0" },
+        { "name": "ShellCheck" }
+    ]
+}

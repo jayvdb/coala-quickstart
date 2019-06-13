@@ -1,0 +1,18 @@
+{
+    "scripts": {
+        "pre": {
+            "install": ". $env:FudgeCI/FudgeAppVeyor.ps1; Fix-AppVeyor"
+        }
+    },
+    "source": ".ci/nuspecs",
+    "packages": [
+        { "name": "hg", "version": "5.0" },
+        { "name": "python", "version": "3.6.8", "appveyor": "python" },
+        { "name": "nodejs", "version": "11.13.0", "appveyor": "node" }
+    ],
+    "pack": {
+        "hg": ".ci/nuspecs/hg.nuspec",
+        "python": ".ci/nuspecs/python.nuspec",
+        "nodejs": ".ci/nuspecs/nodejs.nuspec"
+    }
+}

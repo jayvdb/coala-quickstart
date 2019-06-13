@@ -41,6 +41,15 @@ configuration:
   configuration: .moban.yaml
   configuration_dir: ../coala-mobans/
 targets:
+  - Fudgefile: Fudgefile.jj2
+  - .ci/constants.ps1: constants.ps1.jj2
+  - .ci/deps.python-packages.ps1: fudge/deps.python-packages.ps1
+  - .ci/Fudgefile.appveyor: ci/Fudgefile.appveyor.jj2
+  - .ci/FudgeAppVeyor.ps1: fudge/FudgeAppVeyor.ps1
+  - .ci/FudgeGenerateFake.ps1: fudge/FudgeGenerateFake.ps1
+  - .ci/PrepareAVVM.ps1: fudge/PrepareAVVM.ps1
+  - .ci/FudgePostInstall.ps1: fudge/FudgePostInstall.ps1
+  - .ci/store_env_in_registry.py: ci/store_env_in_registry.py
   - .gitignore: coala-gitignore.jj2
   - .editorconfig: .editorconfig.jj2
   - setup.py: coala-setup.py.jj2
