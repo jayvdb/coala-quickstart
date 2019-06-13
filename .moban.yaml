@@ -41,6 +41,7 @@ configuration:
   configuration: .moban.yaml
   configuration_dir: ../coala-mobans/
 targets:
+  - .ci/fix_path.py: ci/fix_path.py
   - .gitignore: coala-gitignore.jj2
   - .editorconfig: .editorconfig.jj2
   - setup.py: coala-setup.py.jj2
