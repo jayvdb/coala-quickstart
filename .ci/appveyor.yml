@@ -21,6 +21,9 @@ environment:
       %USERPROFILE%\.nuget\packages\fudge\1.3.0\tools;
 
   matrix:
+    - PYTHON_VERSION: 3.5.4
+      PYTHON_MINOR_NODOTS: 35
+
     - PYTHON_VERSION: 3.4.4
       PYTHON_MINOR_NODOTS: 34
 
