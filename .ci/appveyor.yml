@@ -11,13 +11,10 @@ environment:
     NUGET_EXE_NO_PROMPT: 1
     NUGET_HTTP_CACHE_PATH: C:\nuget_http_cache
     CHOCO_CACHE_DIR: C:\choco_cache
-    PLATFORM: $(PLATFORM)
     MSYS_ROOT: C:\msys64
     MSYS_BIN: $(MSYS_ROOT)\usr\bin
     MSSDK_ROOT: C:\Program Files\Microsoft SDKs
     VS_ROOT: C:\Program Files (x86)\Microsoft Visual Studio
-    PSModulePath: >-
-      $(PSModulePath);C:\Program Files (x86)\WindowsPowerShell\Modules;
     PATH: >-
       C:\python;C:\python\Scripts;$(PATH);$(MSYS_BIN);
       C:\tools\fudge\tools;
@@ -41,11 +38,17 @@ cache:
   - C:\nuget_http_cache
   - C:\choco_cache
   - "C:\\pip_cache"
+  - "node_modules"
+  - "C:\\Users\\appveyor\\AppData\\Local\\coala-bears\\coala-bears"
   - "C:\\Users\\appveyor\\AppData\\Roaming\\nltk_data"
 
 branches:
   except:
     - /^sils\/.*/
+
+# This forces unix style line endings in the clone, which is necessary to
+# avoid warning regarding EOLs when running git diff on Windows
+init: git config --global core.autocrlf false
 
 install:
   # Show initial state
@@ -68,21 +71,13 @@ install:
   - python .ci/store_env_in_registry.py
   - refreshenv
 
-  - nuget install fudge
-     -Verbosity quiet
-     -OutputDirectory C:\tools -ExcludeVersion
-
-
   # Set up AppVeyor product versions, and install dummy choco entries for them
-  - ps: fudge install -FudgefilePath .ci/Fudgefile.appveyor
-  - choco list --local-only
+  - ps: . .ci/FudgeCI.ps1; Initialize-AppVeyorVM
   - refreshenv
   - echo %PATH%
   # Avoid tools finding and using MinGW
   - mv C:\MinGW %TEMP%
-  # Avoid tools finding and using Visual Studio
-  - rm -rf %MSSDK_ROOT%
-  - rm -rf %VS_ROOT%*
+  # TODO: Avoid tools finding and using Visual Studio
 
   # Show updated SOE; versions should be as defined in top of the Fudgefile
   - python --version
@@ -96,13 +91,13 @@ install:
 
   - "%MSYS_BIN%\\date.exe"
   # Install remainer of the Fudgefile with chocolatey using Fudge
-  - ps: fudge install
+  - ps: . .ci/Fudge.ps1 install
   - refreshenv
   - echo %PATH%
 
 
   # Check that we have the expected version and architecture for Python
-  - python --version
+  - "python --version"
   - "python -c \"import struct; print(struct.calcsize('P') * 8)\""
   # Confirm other versions
   - node --version
@@ -121,14 +116,14 @@ test_script:
   - python -c "import setuptools; print(setuptools.__version__)"
 
   - py.test
+
   - if not "%PYTHON_VERSION%" == "3.7"
       python setup.py install
+
   - python -m pip install
       git+https://github.com/coala/coala#egg=coala
       git+https://github.com/coala/coala-bears#egg=coala-bears
 
-  - rm -f MYMETA.yml shrinkwrap.yaml pnpm-lock.yaml
-      .ci/refreshenv.sh
 
   - coala --ci
 
@@ -136,7 +131,7 @@ on_success:
   - codecov
 
 on_failure:
-  - codecov & exit 0
+  - codecov
 
 matrix:
   fast_finish: true

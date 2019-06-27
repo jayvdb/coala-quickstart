@@ -12,14 +12,12 @@ Set-StrictMode -Version latest
 
 $deps_base = $env:FudgeCI
 
-function Run-PostInstall {
+function Invoke-PostInstall {
     choco list --local-only
 
     Update-SessionEnvironment
 
     Write-Host "PATH = $env:PATH"
-
-    $config = Get-FudgefileContent Fudgefile
 
     foreach ($pkg in $config.Packages) {
         $name = $pkg.Name
@@ -30,7 +28,7 @@ function Run-PostInstall {
             Write-Host "Running post-install for $name"
 
             . $glob
-            Do-PostInstall
+            Complete-Install
         }
     }
 
@@ -46,9 +44,9 @@ function Run-PostInstall {
             Write-Host "Running $name package installation"
 
             . $glob
-            Do-Install-Packages
+            Invoke-ExtraInstallation
         }
     }
 }
 
-Export-ModuleMember -Function Run-PostInstall
+Export-ModuleMember -Function Invoke-PostInstall

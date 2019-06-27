@@ -44,8 +44,9 @@ targets:
   - Fudgefile: Fudgefile.jj2
   - .ci/constants.ps1: constants.ps1.jj2
   - .ci/deps.python-packages.ps1: fudge/deps.python-packages.ps1
-  - .ci/Fudgefile.appveyor: ci/Fudgefile.appveyor.jj2
-  - .ci/FudgeAppVeyor.ps1: fudge/FudgeAppVeyor.ps1
+  - .ci/Fudge.ps1: fudge/Fudge.ps1
+  - .ci/Modules/FudgeTools.psm1: fudge/Modules/FudgeTools.psm1
+  - .ci/FudgeCI.ps1: fudge/FudgeCI.ps1
   - .ci/FudgeGenerateFake.ps1: fudge/FudgeGenerateFake.ps1
   - .ci/PrepareAVVM.ps1: fudge/PrepareAVVM.ps1
   - .ci/FudgePostInstall.ps1: fudge/FudgePostInstall.ps1

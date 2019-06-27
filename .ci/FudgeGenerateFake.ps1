@@ -39,34 +39,4 @@ function GenerateFakeNuspec {
     Write-Output "Created $nuspec"
 }
 
-function GenerateFakeNuspecs {
-    param(
-        [array]
-        $Packages
-    )
-
-    foreach ($pkg in $Packages) {
-        GenerateFakeNuspec $pkg.Name $pkg.version
-    }
-}
-
-function PackFakeNupkgs {
-    param(
-        [array]
-        $Packages
-    )
-
-    mkdir -Force $env:FudgeCI\nuspecs\ > $null
-
-    GenerateFakeNuspecs $Packages
-
-    # This should work, but is failing
-    # fudge pack -FudgefilePath .ci/Fudgefile.appveyor
-    foreach ($pkg in $Packages) {
-        $filename = ($pkg.Name + '.nuspec')
-        choco pack "$env:FudgeCI\nuspecs\$filename" > $null
-    }
-    mv *.nupkg $env:FudgeCI\nuspecs\
-
-    Write-Output 'Packed!'
-}
+Export-ModuleMember -Function GenerateFakeNuspec
