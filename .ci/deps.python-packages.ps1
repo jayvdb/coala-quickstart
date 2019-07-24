@@ -18,10 +18,10 @@ function Install-Pip-Requirement {
     )
 
     if ($requirement.EndsWith('.txt')) {
-        python -m pip install --constraint constraints.txt -r $requirement
+        python -m pip install --constraint constraints.txt --constraint test-requirements.txt -r $requirement
     }
     else {
-        python -m pip install --constraint constraints.txt $requirement.Split()
+        python -m pip install --constraint constraints.txt --constraint test-requirements.txt $requirement.Split()
     }
 }
 
@@ -34,10 +34,6 @@ function Install-Binary-Packages {
     # pycparser not a wheel, but ensure it is installable before proceeding
     # https://github.com/eliben/pycparser/issues/251
     python -m pip --verbose install pycparser
-    # pyrsistent->jsonschema->nbformat fails on old setuptools if no MS VC 9
-    # https://github.com/tobgu/pyrsistent/issues/172
-    python -m pip install -U setuptools
-    python -m pip install pyrsistent
 }
 
 function Install-coala {
@@ -58,6 +54,9 @@ function Install-coala {
         else {
             Checkpoint-Pip-Constraints
         }
+
+        # pip bales on encountering VCS or other imprecise requirements
+        sed -Ei '/(git|hg)+/d' constraints.txt
     }
 
     if (!($stop_at -eq 'PyPrint')) {
@@ -122,6 +121,12 @@ function Install-Project {
     if (Test-Path 'setup.py') {
         Write-Output "Installing $project_name setup.py"
         Install-Pip-Requirement '.'
+    }
+
+    # coala-bears has an ignore.txt for optional dependencies that ordinary
+    # users may be unable to install.  They are needed to reach 100% coverage.
+    if (Test-Path 'ignore.txt') {
+        Install-Pip-Requirement 'ignore.txt'
     }
 }
 
